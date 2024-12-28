@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * 
+ * Home class
+ * 
+ */
+
 class Home
 {
     use Controller;
