@@ -4,13 +4,15 @@ trait Model
 {
     use Database;
 
-    protected $limit = 10;
-    protected $offset = 0;
-    protected $order_type = "DESC";
+    protected $limit        = 10;
+    protected $offset       = 0;
+    protected $order_type   = "DESC";
     protected $order_column = "id";
+    public $errors          = [];
 
     public function findAll()
     {
+        //$this->table comes from classes that use this trait
         $query = "SELECT * FROM $this->table ORDER BY $this->order_column $this->oder_type limit $this->limit offset $this->offset";
         return $this->query($query);
     }
@@ -45,7 +47,28 @@ trait Model
 
     public function first($data, $data_not = [])
     {
+		$keys = array_keys($data);
+		$keys_not = array_keys($data_not);
+		$query = "select * from $this->table where ";
 
+		foreach ($keys as $key) {
+			$query .= $key . " = :". $key . " && ";
+		}
+
+		foreach ($keys_not as $key) {
+			$query .= $key . " != :". $key . " && ";
+		}
+		
+		$query = trim($query," && ");
+
+		$query .= " limit $this->limit offset $this->offset";
+		$data = array_merge($data, $data_not);
+		
+		$result = $this->query($query, $data);
+		if($result)
+			return $result[0];
+
+		return false;
     }
 
     public function insert($data)

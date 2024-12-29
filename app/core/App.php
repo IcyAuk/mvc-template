@@ -43,7 +43,6 @@ class App
             }
 
         }
-show($URL);
         call_user_func_array([$controller, $this->method], $URL); // call_user_func_array() is a PHP function that calls a function with an array of parameters. In this case, it calls the index() method of the Home class with an empty array of parameters. This is equivalent to calling $home->index().
     }
     
